@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": {
+      "zh": "蓝牙耳机",
+      "en": "Bluetooth Earphones",
+      "ja": "Bluetoothイヤホン"
+    },
+    "price": 199,
+    "image": "https://via.placeholder.com/150"
+  },
+  {
+    "id": 2,
+    "name": {
+      "zh": "机械键盘",
+      "en": "Mechanical Keyboard",
+      "ja": "メカニカルキーボード"
+    },
+    "price": 499,
+    "image": "https://via.placeholder.com/150"
+  }
+]
