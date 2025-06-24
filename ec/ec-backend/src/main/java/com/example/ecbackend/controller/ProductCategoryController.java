@@ -42,7 +42,7 @@ public class ProductCategoryController {
             return Response.success(null);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.fail(1, "添加失败");
+            return Response.error(1, "添加失败");
         }
     }
 
@@ -59,7 +59,7 @@ public class ProductCategoryController {
             return Response.success(null);
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.fail(1, "修改失败");
+            return Response.error(1, "修改失败");
         }
     }
 
@@ -72,7 +72,7 @@ public class ProductCategoryController {
             return Response.fail(1, "删除失败：该分类下仍有商品，请先删除商品");
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.fail(2, "删除失败：服务器错误");
+            return Response.error(2, "删除失败：服务器错误");
         }
     }
 }

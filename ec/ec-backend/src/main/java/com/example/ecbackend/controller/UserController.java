@@ -35,7 +35,7 @@ public class UserController {
             return Response.success("注册成功");
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.fail(2, "注册失败，服务器错误");
+            return Response.error(2, "注册失败，服务器错误");
         }
     }
 
