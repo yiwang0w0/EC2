@@ -9,6 +9,33 @@
     SELECT * FROM products
   </select>
 
+  <resultMap id="ProductWithCategoryResult" type="com.example.ecbackend.entity.Product">
+    <id property="id" column="id"/>
+    <result property="name" column="name"/>
+    <result property="price" column="price"/>
+    <result property="imageUrl" column="image_url"/>
+    <result property="stock" column="stock"/>
+    <result property="categoryId" column="category_id"/>
+    <result property="categoryName" column="category_name"/>
+  </resultMap>
+
+  <select id="selectWithCategory" resultMap="ProductWithCategoryResult">
+    SELECT p.*, c.name AS category_name
+    FROM products p
+    LEFT JOIN product_category c ON p.category_id = c.id
+  </select>
+
+  <select id="selectByPage" resultMap="ProductWithCategoryResult">
+    SELECT p.*, c.name AS category_name
+    FROM products p
+    LEFT JOIN product_category c ON p.category_id = c.id
+    LIMIT #{offset}, #{size}
+  </select>
+
+  <select id="countAll" resultType="int">
+    SELECT COUNT(*) FROM products
+  </select>
+
   <select id="findById" parameterType="int" resultType="com.example.ecbackend.entity.Product">
     SELECT * FROM products WHERE id = #{id}
   </select>
