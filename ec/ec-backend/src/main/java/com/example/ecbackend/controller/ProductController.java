@@ -1,7 +1,9 @@
 package com.example.ecbackend.controller;
 
+import com.example.ecbackend.common.PageResult;
+import com.example.ecbackend.common.Response;
 import com.example.ecbackend.entity.Product;
-import com.example.ecbackend.mapper.ProductMapper;
+import com.example.ecbackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,31 +15,35 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    private ProductMapper productMapper;
+    private ProductService productService;
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productMapper.findAll();
+    public Response<PageResult<Product>> getAllProducts(@RequestParam(defaultValue = "1") int page,
+                                                        @RequestParam(defaultValue = "10") int size) {
+        return Response.success(productService.getProductsByPage(page, size));
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Integer id) {
-        return productMapper.findById(id);
+    public Response<Product> getProductById(@PathVariable Integer id) {
+        return Response.success(productService.getById(id));
     }
 
     @PostMapping
-    public void addProduct(@RequestBody Product product) {
-        productMapper.insert(product);
+    public Response<Void> addProduct(@RequestBody Product product) {
+        productService.addProduct(product);
+        return Response.success(null);
     }
 
     @PutMapping("/{id}")
-    public void updateProduct(@PathVariable Integer id, @RequestBody Product product) {
+    public Response<Void> updateProduct(@PathVariable Integer id, @RequestBody Product product) {
         product.setId(id);
-        productMapper.update(product);
+        productService.updateProduct(product);
+        return Response.success(null);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProduct(@PathVariable Integer id) {
-        productMapper.deleteById(id);
+    public Response<Void> deleteProduct(@PathVariable Integer id) {
+        productService.deleteProduct(id);
+        return Response.success(null);
     }
 }

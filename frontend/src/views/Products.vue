@@ -48,7 +48,7 @@
         <el-button type="primary" @click="handleAddProduct">添加商品</el-button>
       </div>
 
-      <el-table :data="pagedProducts" stripe border style="width: 100%">
+      <el-table :data="pagedProducts" :loading="loading" stripe border style="width: 100%">
         <el-table-column label="主分类">
           <template #default="{ row }">
             {{ categoryMap[parentMap[row.categoryId]] || '未知' }}
@@ -83,7 +83,7 @@
       <el-pagination
         background
         layout="prev, pager, next"
-        :total="filteredProducts.length"
+        :total="total"
         :page-size="pageSize"
         :current-page="currentPage"
         @current-change="handlePageChange"
@@ -114,6 +114,8 @@ export default {
   data() {
     return {
       products: [],
+      total: 0,
+      loading: false,
       search: '',
       categories: [],
       selectedCategoryId: null,
@@ -126,38 +128,20 @@ export default {
     }
   },
   computed: {
-    filteredProducts() {
-      return this.products.filter(product => {
-        const matchName = this.search === '' || product.name.includes(this.search)
-
-        let matchCategory = true
-        if (this.selectedCategoryId !== null) {
-          const selectedId = this.selectedCategoryId
-          const selectedCategory = this.categories.find(c => c.id === selectedId)
-          const isParent = selectedCategory && selectedCategory.parentId === null
-
-          if (isParent) {
-            const childIds = this.categories
-              .filter(c => c.parentId === selectedId)
-              .map(c => c.id)
-            matchCategory = childIds.includes(product.categoryId)
-          } else {
-            matchCategory = product.categoryId === selectedId
-          }
-        }
-
-        return matchName && matchCategory
-      })
-    },
     pagedProducts() {
-      const start = (this.currentPage - 1) * this.pageSize
-      return this.filteredProducts.slice(start, start + this.pageSize)
+      return this.products
     }
   },
   methods: {
     async fetchProducts() {
-      const res = await axios.get('/products')
-      this.products = res.data
+      this.loading = true
+      const params = { page: this.currentPage, size: this.pageSize }
+      if (this.search) params.search = this.search
+      if (this.selectedCategoryId !== null) params.categoryId = this.selectedCategoryId
+      const res = await axios.get('/products', { params })
+      this.products = res.data.records
+      this.total = res.data.total
+      this.loading = false
     },
     async fetchCategories() {
       try {
@@ -178,14 +162,17 @@ export default {
     },
     filterProducts() {
       this.currentPage = 1
+      this.fetchProducts()
     },
     resetFilter() {
       this.search = ''
       this.selectedCategoryId = null
       this.currentPage = 1
+      this.fetchProducts()
     },
     handlePageChange(val) {
       this.currentPage = val
+      this.fetchProducts()
     },
     goBack() {
       this.$router.back()
