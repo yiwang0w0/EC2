@@ -26,7 +26,7 @@ public class UserController {
         User exist = userService.findByUsername(user.getUsername());
 
         if (exist != null) {
-            return Response.fail(1, "用户名已存在");
+            return Response.error(1, "用户名已存在");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -35,7 +35,7 @@ public class UserController {
             return Response.success("注册成功");
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.fail(2, "注册失败，服务器错误");
+            return Response.error(2, "注册失败，服务器错误");
         }
     }
 
@@ -59,7 +59,7 @@ public class UserController {
             result.put("token", "mock-token");
             return Response.success(result);
         } else {
-            return Response.fail(1, "用户名或密码错误");
+            return Response.error(1, "用户名或密码错误");
         }
     }
 }

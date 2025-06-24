@@ -21,11 +21,11 @@ public class ProductCategoryController {
     public Response<List<ProductCategory>> getAll() {
         return Response.success(categoryService.getAll());
     }
-
-    @GetMapping("/can-delete/{id}")
-    public Response<String> canDelete(@PathVariable Integer id) {
-        int count = categoryService.countProductsByCategory(id);
-        if (count > 0) {
+            return Response.error(1, "该分类下仍有商品，无法删除");
+            return Response.error(1, "添加失败");
+            return Response.error(1, "修改失败");
+            return Response.error(1, "删除失败：该分类下仍有商品，请先删除商品");
+            return Response.error(2, "删除失败：服务器错误");
             return Response.fail(1, "该分类下仍有商品，无法删除");
         }
         return Response.success(null);

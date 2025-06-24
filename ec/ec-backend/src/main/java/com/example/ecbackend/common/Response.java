@@ -21,6 +21,14 @@ public class Response<T> {
         return new Response<>(code, msg, null);
     }
 
+    public static <T> Response<T> error(String msg) {
+        return new Response<>(500, msg, null);
+    }
+
+    public static <T> Response<T> error(int code, String msg) {
+        return new Response<>(code, msg, null);
+    }
+
     public int getCode() {
         return code;
     }
