@@ -11,4 +11,6 @@ public class Product {
     private String imageUrl;
     private Integer stock;
     private Integer categoryId;  // 分类ID
+    // 用于接收联表查询的分类名称
+    private String categoryName;
 }

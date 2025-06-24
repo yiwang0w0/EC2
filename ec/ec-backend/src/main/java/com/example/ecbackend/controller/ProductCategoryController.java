@@ -1,8 +1,7 @@
 package com.example.ecbackend.controller;
 
 import com.example.ecbackend.entity.ProductCategory;
-import com.example.ecbackend.mapper.ProductCategoryMapper;
-import com.example.ecbackend.mapper.ProductMapper;
+import com.example.ecbackend.service.ProductCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,19 +15,16 @@ import java.util.Map;
 public class ProductCategoryController {
 
     @Autowired
-    private ProductCategoryMapper categoryMapper;
-
-    @Autowired
-    private ProductMapper productMapper;
+    private ProductCategoryService categoryService;
 
     @GetMapping
     public List<ProductCategory> getAll() {
-        return categoryMapper.findAll();
+        return categoryService.getAll();
     }
     @GetMapping("/can-delete/{id}")
     public Map<String, Object> canDelete(@PathVariable Integer id) {
         Map<String, Object> result = new HashMap<>();
-        int count = productMapper.countByCategoryId(id); // 查询该分类下商品数量
+        int count = categoryService.countProductsByCategory(id); // 查询该分类下商品数量
         if (count > 0) {
             result.put("code", 1);
             result.put("message", "该分类下仍有商品，无法删除");
@@ -46,7 +42,7 @@ public class ProductCategoryController {
             System.out.println("分类名: " + category.getName());
             System.out.println("父类ID: " + category.getParentId());
 
-            categoryMapper.insert(category);
+            categoryService.addCategory(category);
 
             result.put("code", 0);
             result.put("message", "添加成功");
@@ -59,14 +55,14 @@ public class ProductCategoryController {
     }
     @GetMapping("/parent/{parentId}")
     public List<ProductCategory> getByParentId(@PathVariable Integer parentId) {
-        return categoryMapper.findByParentId(parentId);
+        return categoryService.getByParentId(parentId);
     }
     @PutMapping("/{id}")
     public Map<String, Object> updateCategoryName(@PathVariable Integer id, @RequestBody Map<String, String> body) {
         Map<String, Object> result = new HashMap<>();
         try {
             String name = body.get("name");
-            categoryMapper.updateNameById(id, name);
+            categoryService.updateName(id, name);
             result.put("code", 0);
             result.put("message", "修改成功");
         } catch (Exception e) {
@@ -81,7 +77,7 @@ public class ProductCategoryController {
     public Map<String, Object> deleteCategory(@PathVariable Integer id) {
         Map<String, Object> result = new HashMap<>();
         try {
-            categoryMapper.deleteById(id);
+            categoryService.deleteById(id);
             result.put("code", 0);
             result.put("message", "删除成功");
         } catch (DataIntegrityViolationException e) {
