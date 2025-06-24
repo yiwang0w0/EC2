@@ -24,7 +24,12 @@ instance.interceptors.request.use(
 // 响应拦截器（可选）：处理错误统一提示
 instance.interceptors.response.use(
   response => {
-    return response
+    const res = response.data
+    if (res.code !== 200) {
+      alert(res.msg || '请求失败')
+      return Promise.reject(new Error(res.msg || 'error'))
+    }
+    return res
   },
   error => {
     if (error.response) {
