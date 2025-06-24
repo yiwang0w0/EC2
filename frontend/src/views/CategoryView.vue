@@ -203,11 +203,7 @@ const handleDeleteCategory = async () => {
   if (!selectedCategoryId.value) return
 
   try {
-    const check = await axios.get(`/categories/can-delete/${selectedCategoryId.value}`)
-    if (check.data.code === 1) {
-      ElMessage.warning(check.data.message)
-      return
-    }
+    await axios.get(`/categories/can-delete/${selectedCategoryId.value}`)
 
     await ElMessageBox.confirm('确定删除此分类吗？', '提示', {
       confirmButtonText: '确定',
@@ -215,15 +211,11 @@ const handleDeleteCategory = async () => {
       type: 'warning'
     })
 
-    const res = await axios.delete(`/categories/${selectedCategoryId.value}`)
-    if (res.data.code === 0) {
-      ElMessage.success('删除成功')
-      selectedCategoryId.value = null
-      selectedCategoryData.value = null
-      await loadCategories()
-    } else {
-      ElMessage.warning(res.data.message || '删除失败')
-    }
+    await axios.delete(`/categories/${selectedCategoryId.value}`)
+    ElMessage.success('删除成功')
+    selectedCategoryId.value = null
+    selectedCategoryData.value = null
+    await loadCategories()
   } catch (err) {
     if (err && err !== 'cancel' && err !== 'close') {
       ElMessage.error('请求失败')

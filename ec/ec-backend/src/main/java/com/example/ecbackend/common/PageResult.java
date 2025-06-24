@@ -3,20 +3,20 @@ package com.example.ecbackend.common;
 import java.util.List;
 
 public class PageResult<T> {
-    private List<T> data;
+    private List<T> records;
     private int total;
 
-    public PageResult(List<T> data, int total) {
-        this.data = data;
+    public PageResult(List<T> records, int total) {
+        this.records = records;
         this.total = total;
     }
 
-    public List<T> getData() {
-        return data;
+    public List<T> getRecords() {
+        return records;
     }
 
-    public void setData(List<T> data) {
-        this.data = data;
+    public void setRecords(List<T> records) {
+        this.records = records;
     }
 
     public int getTotal() {
