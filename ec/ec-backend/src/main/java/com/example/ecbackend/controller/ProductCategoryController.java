@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,15 +21,16 @@ public class ProductCategoryController {
     public Response<List<ProductCategory>> getAll() {
         return Response.success(categoryService.getAll());
     }
+
     @GetMapping("/can-delete/{id}")
     public Response<String> canDelete(@PathVariable Integer id) {
-        int count = categoryService.countProductsByCategory(id); // 查询该分类下商品数量
+        int count = categoryService.countProductsByCategory(id);
         if (count > 0) {
             return Response.fail(1, "该分类下仍有商品，无法删除");
         }
         return Response.success(null);
     }
-    
+
     @PostMapping
     public Response<String> addCategory(@RequestBody ProductCategory category) {
         try {
@@ -45,10 +45,12 @@ public class ProductCategoryController {
             return Response.fail(1, "添加失败");
         }
     }
+
     @GetMapping("/parent/{parentId}")
     public Response<List<ProductCategory>> getByParentId(@PathVariable Integer parentId) {
         return Response.success(categoryService.getByParentId(parentId));
     }
+
     @PutMapping("/{id}")
     public Response<String> updateCategoryName(@PathVariable Integer id, @RequestBody Map<String, String> body) {
         try {
