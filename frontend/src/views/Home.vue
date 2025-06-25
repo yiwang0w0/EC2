@@ -4,11 +4,11 @@
     <el-row justify="end" class="mb-4">
       <template v-if="userStore.isLoggedIn">
         <span class="mr-2">👋 欢迎，{{ userStore.username }}</span>
-        <el-button type="text" @click="logout">退出</el-button>
+        <el-button link @click="logout">退出</el-button>
       </template>
       <template v-else>
-        <el-button type="text" @click="$router.push('/login')">{{ $t('login') }}</el-button>
-        <el-button type="text" @click="$router.push('/register')">{{ $t('register') }}</el-button>
+        <el-button link @click="$router.push('/login')">{{ $t('login') }}</el-button>
+        <el-button link @click="$router.push('/register')">{{ $t('register') }}</el-button>
       </template>
     </el-row>
 
